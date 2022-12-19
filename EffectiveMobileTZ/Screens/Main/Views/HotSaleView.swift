@@ -9,12 +9,13 @@ import SwiftUI
 
 struct HotSaleView: View {
     var sale: HotSales
+    let width = UIScreen.main.bounds.width
+    let height: CGFloat
     
-    var body: some View {
-        let width = UIScreen.main.bounds.width
-        ZStack(alignment: .trailing) {
+    var image: some View  {
+        return ZStack {
             Rectangle()
-                .frame(width: width, height: 182)
+                .frame(width: width)
                 .background(.black)
             HStack {
                 Spacer()
@@ -25,52 +26,45 @@ struct HotSaleView: View {
                             .aspectRatio(
                                 contentMode: .fit
                             )
-                            .frame(
-                                maxWidth: width,
-                                maxHeight: 182,
-                                alignment: .trailing
-                            )
                     }
                     else {
                         Rectangle()
-                            .frame(
-                                width: width,
-                                height: 182
-                            )
-                            .background(Color.black)
+                            .background(Color.white)
                     }
                 }
             placeholder: {
                 Rectangle()
-                    .frame(
-                        width: width,
-                        height: 182
-                    )
                     .background(Color.black)
             }
             }
             Rectangle()
-                .frame(width: width, height: 182)
                 .mask(
                     LinearGradient(
                         gradient: Gradient(colors: [.black, .black, .clear, .clear]),
                         startPoint: .leading, endPoint: .trailing
                     )
                 )
-            HStack {
-                VStack(alignment: .leading, spacing: 0) {
+        }
+    }
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            image
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 5) {
                     if sale.is_new == true {
-                        Text("New")
-                            .textStyle(color: .defined(.white), size: 10, font: .SFProBold)
-                            .foregroundColor(.white)
-                            .background(
-                                Circle()
-                                    .fill(
-                                        Color("Accent")
-                                    )
-                                    .frame(width: 27, height: 27)
-                            )
-                            .padding(.bottom, 18)
+                        ZStack(alignment: .center) {
+                            Circle()
+                                .foregroundColor(Color.getColor(.accent))
+                                .frame(width: 27)
+                            Text("New")
+                                .textStyle(color: .defined(.white), size: 10, font: .SFProBold)
+                        }
+                    }
+                    else {
+                        Circle()//placeholder
+                            .foregroundColor(.clear)
+                            .frame(width: 27)
                     }
                     Text(sale.title)
                         .textStyle(color: .defined(.white), size: 25, font: .SFProBold)
@@ -78,19 +72,25 @@ struct HotSaleView: View {
                     Text(sale.subtitle)
                         .textStyle(color: .defined(.white), size: 11, font: .SFProRegular)
                         .padding(.bottom, 26)
+//                    Spacer()
                     Button("Buy now!", action: {
                         print("buy now pressed")
                     })
-                    .textStyle(color: .defined(.black), size: 11, font: .SFProBold)
-                    .padding(EdgeInsets(top: 5, leading: 25, bottom: 5, trailing: 27))
+                    .textStyle(
+                        color: .defined(.black),
+                        size: 11,
+                        font: .SFProBold)
+                    .padding(
+                        EdgeInsets(top: 5, leading: 25, bottom: 5, trailing: 27))
                     .background(.white)
                     .cornerRadius(5)
                 }
                 Spacer()
             }
-            .padding(.leading, 25)
-            .padding(.top, 23)
+            .padding(EdgeInsets(top: 15, leading: 30, bottom: 0, trailing: 0))
+//            .padding(.leading, 40)
         }
+        .frame(width: width-30, height: height)
         .cornerRadius(10)
     }
 }
@@ -102,7 +102,8 @@ struct HotSaleView_Previews: PreviewProvider {
             title: "Samsung Galaxy A71",
             subtitle: "Súper. Mega. Rápido.",
             picture: URL(string: "https://cdn-2.tstatic.net/kupang/foto/bank/images/pre-order-samsung-galaxy-a71-laris-manis-inilah-rekomendasi-ponsel-harga-rp-6-jutaan.jpg"),
-            is_buy: true
-        ))
+            is_buy: true,
+            is_new: false
+        ), height: UIScreen.main.bounds.height / 4)
     }
 }

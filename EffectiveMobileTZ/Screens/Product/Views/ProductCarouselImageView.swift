@@ -11,44 +11,35 @@ struct ProductCarouselImageView: View {
     private let height = UIScreen.main.bounds.height / 3
     private let width = UIScreen.main.bounds.width / 1.6
     
-    let url: URL
+    let url: URL?
     var body: some View {
         ZStack {
             Rectangle()
-                .frame(maxWidth: width, maxHeight: height)
+//                .frame(maxWidth: width, maxHeight: height)
                 .foregroundColor(.white)
             AsyncImage(url: url) { image in
                 if let image = image {
                     image
                         .resizable()
+                        .padding(10)
                         .aspectRatio(
-                            contentMode: .fill
+                            contentMode: .fit
                         )
-                        .frame(
-                            maxWidth: width - 10,
-                            maxHeight: height - 10)
-                        .clipped()
-                    //                        .padding(20)
+
                 }
                 else {
                     Rectangle()
-                        .frame(
-                            maxWidth: width - 10,
-                            maxHeight: height - 10
-                        )
+                        .clipped()
                         .foregroundColor(Color.white)
                 }
             }
         placeholder: {
             Rectangle()
-                .frame(
-                    maxWidth: width - 10,
-                    maxHeight: height - 10
-                )
                 .foregroundColor(Color.white)
         }
         }
         .cornerRadius(20)
+        .padding()
         .shadow(radius: 10)
     }
     

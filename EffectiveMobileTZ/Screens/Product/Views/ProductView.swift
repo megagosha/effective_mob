@@ -44,22 +44,18 @@ struct ProductView: View {
                     icon: .bag, style: .accent
                 )
             }
-            if !vm.isRefreshing {
-                ACarousel(vm.pictures,
-                          id: \.self,
-                          index: $carouselIndex,
-                          spacing: 0,
-                          headspace: 50,
-                          sidesScaling: 0.8,
-                          isWrap: true,
-                          autoScroll: .inactive
-                ) { image in
-                    ProductCarouselImageView(url: image)
-                }
-//                .frame(
-//                    width: UIScreen.main.bounds.width,
-//                    height: UIScreen.main.bounds.height / 2.7 + 14
-//                )
+            
+            ACarousel(vm.pictures,
+                      id: \.self,
+                      index: $carouselIndex,
+                      spacing: 0,
+                      headspace: 50,
+                      sidesScaling: 0.8,
+                      isWrap: true,
+                      autoScroll: .inactive
+            ) { image in
+                ProductCarouselImageView(url: image)
+               
             }
             Spacer()
             BottomSheetView(content: {
@@ -85,42 +81,64 @@ struct ProductView: View {
                     .padding(
                         EdgeInsets(top: 28, leading: 10, bottom: 0, trailing: 10)
                     )
-                    SegmentedControlView(selectedIndex: $tabIndex, titles: titles)
+                    SegmentedControlView(
+                        selectedIndex: $tabIndex, titles: titles
+                    )
+                    .padding(
+                        EdgeInsets(top: 0, leading: 0, bottom: 23, trailing: 3)
+                    )
+                    SpecIconsRowView(device: vm.product)
                         .padding(
-                            EdgeInsets(top: 0, leading: 0, bottom: 23, trailing: 3)
+                            .bottom, 10
                         )
-                    SpecIconsRowView(device: vm.product).padding(.bottom, 10)
                     Text("Select color and capacity")
-                        .textStyle(color: .background, size: 16, font: .MarkProMedium)
-                    HStack {
-                        ForEach(vm.colors, id: \.self) { color in
-                            ColorSelectionButton(color: color, selectedColor: $vm.selectedColor)
-                        }
-                        Spacer()
-                        ForEach(vm.storageOptions, id: \.self) {value in
-                            CapacityButton(value: value, selectedValue: $vm.selectedStorage)
-                        }
-                        
-                    }.padding(EdgeInsets(top: 0, leading: 45, bottom: 0, trailing: 45))
-                    LargeSquaredButtonView(content: {
+                        .textStyle(
+                            color: .background,
+                            size: 16,
+                            font: .MarkProMedium)
+                    Group {
                         HStack {
-                            Text("Add to cart")
-                                .padding(.leading, 45)
+                            ForEach(vm.colors, id: \.self) { color in
+                                ColorSelectionButton(color: color, selectedColor: $vm.selectedColor)
+                            }
                             Spacer()
-                            Text("$" + String(vm.product.price))
-                                .padding(.trailing, 38)
+                            ForEach(vm.storageOptions, id: \.self) {value in
+                                CapacityButton(value: value, selectedValue: $vm.selectedStorage)
+                            }
+                            
                         }
-                    }, action: {print("Checkout pressed")})
+                        //                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                        LargeSquaredButtonView(
+                            content: {
+                                HStack {
+                                    Text("Add to cart")
+                                        .padding(.leading, 45)
+                                    Spacer()
+                                    Text("$" + String(vm.product.price))
+                                        .padding(.trailing, 38)
+                                }
+                            },
+                            action: {print("Checkout pressed")}
+                        )
+                    }
                 }
                 .padding(
-                    EdgeInsets(top: 0, leading: 27, bottom: 0, trailing: 27)
+                    EdgeInsets(top: 0, leading: 27, bottom: 25, trailing: 27)
                 )
-            })
+            }
+            )
+
         }
         .edgesIgnoringSafeArea(.bottom)
-    .navigationBarTitle("")
-            .navigationBarHidden(true)
+        .background(Color.getColor(.gray))
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
     }
 }
 
 
+struct ProductView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProductView(vm: ProductViewModel(id: 0))
+    }
+}

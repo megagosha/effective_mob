@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct MainPageView: View {
-    @StateObject var vm: MainPageViewModel
-    
+    @ObservedObject var vm: MainPageViewModel
+    @ObservedObject var cartVm: CartViewModel
     @State var isFilterOpen: Bool = false
     
     var body: some View {
-        
         ZStack(alignment: .bottom) {
             ScrollView(.vertical) {
                 VStack(alignment: .center, spacing: 35) {
@@ -24,13 +23,10 @@ struct MainPageView: View {
                         .environmentObject(vm)
                     BestSellerView()
                         .environmentObject(vm)
+                        .padding(.bottom, 30)
                 }
                 
             }
-            .safeAreaInset(edge: .bottom, content: {
-                TabBarView(vm: vm)
-            }
-            )
             .background(
                 Color(
                     red: 248/255,
@@ -38,12 +34,17 @@ struct MainPageView: View {
                     blue: 248/255
                 )
             )
-            if isFilterOpen {
-                FilterView(
-                    currentSelection: $vm.selectedFilter, isShowing: $isFilterOpen
-                ).frame(height: 400)
+                if isFilterOpen {
+                    FilterView(
+                        currentSelection: $vm.selectedFilter, isShowing: $isFilterOpen
+                    )
+                    .frame(height: 400)
                     .padding(.bottom, -40)
-            }
+                }
+                if !isFilterOpen {
+                    TabBarView(vm: vm, itemsInCart: $cartVm.itemsInCart)
+                }
+          
         }
         .navigationTitle("")
         .navigationBarBackButtonHidden(true)
@@ -56,6 +57,6 @@ struct MainPageView: View {
 
 struct MainPageView_Previews: PreviewProvider {
     static var previews: some View {
-        MainPageView(vm: MainPageViewModel())
+        MainPageView(vm: MainPageViewModel(), cartVm: CartViewModel())
     }
 }

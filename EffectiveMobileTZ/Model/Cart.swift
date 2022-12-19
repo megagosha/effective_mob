@@ -9,7 +9,7 @@ import Foundation
 
 
 struct Cart: Codable {
-    let basket: [CartItem]
+    var basket: [CartItem]
     let delivery: String
     let id: String
     let total: Int

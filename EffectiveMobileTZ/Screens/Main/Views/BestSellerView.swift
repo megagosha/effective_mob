@@ -7,78 +7,34 @@
 
 import SwiftUI
 
-struct BestSellerCardView: View {
-    @State var sale: BestSeller
-    //    @EnvironmentObject var hotSales: ItemsStore
-    var body: some View {
-        VStack {
-            ZStack(alignment: .topTrailing) {
-                AsyncImage(url: URL(string: sale.picture)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(
-                            contentMode: .fit
-                        )
-                        .frame(
-                            height: 168
-                        )
-                    
-                } placeholder: {
-                    Color.black
-                }
-                .cornerRadius(10)
-                Button(action: {
-                    print("Category  pressed")
-                    sale.is_favorites.toggle()
-                }) {
-                    Image(sale.is_favorites ? "HeartFilled": "Heart")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxHeight: 11)
-                        .foregroundColor(
-                            Color("Accent")
-                        )
-                        .padding(7)
-                }
-                .background(.white)
-                .clipShape(Circle())
-                .shadow(radius: 20)
-                
-            }
-            HStack {
-                Text("$" + String(sale.discount_price)).textStyle(color: .defined(.black), size: 16, font: .MarkProBold)
-                Text("$" + String(sale.price_without_discount)).textStyle(color:
-                        .custom(204, 204, 204), size: 10, font: .MarkProRegular)
-            }
-            Text(sale.title).textStyle(color: .defined(.black), size: 10, font: .MarkProRegular)
-        }
-    }
-}
+
+
 struct BestSellerView: View {
     
     @EnvironmentObject var vm: MainPageViewModel
     
     var gridItemLayout = [GridItem(.flexible()), GridItem(.flexible())]
+    let width = (UIScreen.main.bounds.width) / 2
+    let height = UIScreen.main.bounds.height / 4.4
     
     var body: some View {
         VStack {
             TitleView(title: "Best sales", buttonText: "see more").padding(EdgeInsets(top: 0, leading: 17, bottom: 8, trailing: 27))
-            LazyVGrid(columns: gridItemLayout) {
+            LazyVGrid(columns: gridItemLayout, spacing: 10) {
                 ForEach(vm.bestSales) { sale in
                     BestSellerCardView(sale: sale)
+//                        .frame(width: width, height: height)
                         .onTapGesture {
                             vm.showProduct(sale.id)
                         }
-                }.padding()
-                    .background(
-                        Color(.white)
-                    )
-                    .cornerRadius(10)
-                
-                
-            }.background(Color.getColor(.custom(248, 248, 248)) ).frame(width: UIScreen.main.bounds.width)
+                }
+            }
+            .padding(EdgeInsets(top: 0, leading: 14, bottom: 15, trailing: 14))
+        
         }
-        //            }
+        .background(
+            Color.getColor(.custom(248, 248, 248))
+        )
     }
 }
 

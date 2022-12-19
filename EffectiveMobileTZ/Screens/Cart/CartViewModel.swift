@@ -26,6 +26,8 @@ final class CartViewModel: ObservableObject {
     
     @Published var itemCounters: [Int] = []
     
+    @Published var itemsInCart: Int = 0
+    
     private let apiService: APIService
     
     private let errorSubject = PassthroughSubject<APIServiceError, Never>()
@@ -68,6 +70,7 @@ final class CartViewModel: ObservableObject {
             } receiveValue: { [weak self] cart in
                 self?.cart = cart
                 self?.createCounters()
+                self?.updateItemsInCart()
                 self?.isRefreshing = false
             }
         bag.insert(responseStream)
@@ -93,12 +96,30 @@ final class CartViewModel: ObservableObject {
         
     }
     
+    func updateItemsInCart() {
+        self.itemsInCart = itemCounters.reduce(0, +)
+    }
+    
+    private func getCount()->Int {
+        return itemCounters.reduce(0, +)
+    }
+    
+    public func removeProduct(_ product: CartItem) {
+        let ix = cart.basket.firstIndex(where: {$0.id == product.id})
+        guard ix != nil else {
+            return
+        }
+        itemCounters.remove(at: ix!)
+        cart.basket.remove(at: ix!)
+        updateItemsInCart()
+    }
+    
     func showMap() {
         print("Show map in vm triggered")
     }
     
     func back() {
-        router!.pop()
+        router!.popLast()
     }
     
     let numberFormatter: NumberFormatter = {

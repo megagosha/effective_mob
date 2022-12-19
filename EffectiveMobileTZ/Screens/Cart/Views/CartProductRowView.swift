@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CartProductRowView: View {
     @Binding var value: Int
+    
     @EnvironmentObject var vm: CartViewModel
     
     var product: CartItem
@@ -63,8 +64,18 @@ struct CartProductRowView: View {
             }
             Spacer()
             CartStepper(value: $value, in: 0...999)
-                .stepperStyle(VerticalStepperStyle())
-            Button(action: {print("trash pressed")}) {
+                .stepperStyle(
+                    VerticalStepperStyle()
+                )
+                .onChange(of: value) { newValue in
+                    if newValue == 0 {
+                        vm.removeProduct(product)
+                    }
+                    vm.updateItemsInCart()
+                }
+            Button(action: {print("trash pressed")
+                vm.removeProduct(product)
+            }) {
                 Image("Trash")
             }
             .padding(
@@ -72,6 +83,7 @@ struct CartProductRowView: View {
             )
         }
         .frame(maxHeight: height / 9)    }
+    
 }
 
 struct CartProductRowView_Previews: PreviewProvider {
@@ -82,6 +94,6 @@ struct CartProductRowView_Previews: PreviewProvider {
             CartProductRowView(value: $val, product: product)
                 .border(.red)
         }.padding(EdgeInsets(top: 100, leading: 35, bottom: 100, trailing: 35))
-        .background(Color.getColor(.background))
+            .background(Color.getColor(.background))
     }
 }

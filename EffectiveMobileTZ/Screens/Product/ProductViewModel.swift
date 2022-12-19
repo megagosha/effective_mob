@@ -19,7 +19,7 @@ class ProductViewModel: ObservableObject {
         
     @Published public var product: Device = Device.makeEmpty()
     
-    @Published public var pictures: [URL] = []
+    @Published public var pictures: [URL?] = [nil]
     
     @Published public var colors: [Color] = []
     
@@ -103,7 +103,7 @@ class ProductViewModel: ObservableObject {
     }
     
     public func goToCart() {
-        router?.coordinator.goToCart()
+        router?.coordinator.route(to: \.pushCart)
     }
 }
 

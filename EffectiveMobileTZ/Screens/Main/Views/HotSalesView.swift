@@ -13,42 +13,38 @@ struct HotSalesView: View {
     @EnvironmentObject var vm: MainPageViewModel
     
     @State var currentIndex: Int = 0
-    
+    let height = UIScreen.main.bounds.height
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 0) {
             TitleView(title: "Hot sales", buttonText: "see more")
                 .padding(
                     EdgeInsets(top: 0, leading: 17, bottom: 8, trailing: 17)
                 )
-            if $vm.hotSales.count > 0 {
+            if !vm.isRefreshing {
                 ACarousel(vm.hotSales,
                           id: \.self,
                           index: $currentIndex,
-                          spacing: 10,
+                          spacing: 0,
                           headspace: 0,
                           sidesScaling: 0.8,
-                          isWrap: false,
+                          isWrap: true,
                           autoScroll: .active(3)
                 ) { sale in
-                    HotSaleView(sale: sale).onTapGesture {
-                        vm.showProduct(sale.id)
-                    }
-                    //                        .padding(.leading, 15)
-                    //                        .padding(.trailing, 21)
+                    HotSaleView(sale: sale, height: height/4.5)
+                        .onTapGesture {
+                            vm.showProduct(sale.id)
+                        }
                 }
-                .frame(
-                    width: UIScreen.main.bounds.width, height: 182
-                )
-            } else {
-                HotSaleView(sale: HotSales.placeholder)
+                .cornerRadius(10)
+                .frame(height: height/4.5)
+            }
+            else {
+                Rectangle()
+                    .foregroundColor(.white)
                     .frame(
-                        width: UIScreen.main.bounds.width, height: 200
+                        width: UIScreen.main.bounds.width,
+                        height: height/4.5
                     )
-                //                    .padding(.leading, 15)
-                //                    .padding(.trailing, 21)
-                //                    .frame(width: UIScreen.main.bounds.width, height: 182)
-                    .redacted(reason: .placeholder)
-                
             }
         }
     }
@@ -77,29 +73,30 @@ extension Color {
         case .background:
             return Color("Background")
         case .invisible: return Color(red: 0, green: 0, blue: 0, opacity: 0)
+        case .gray: return Color(red: 0.96, green: 0.96, blue: 0.96, opacity: 0)
         }
     }
     
     enum SColor {
-        case background, accent, transparentGray, invisible
+        case background, accent, transparentGray, invisible, gray
         case defined(Color)
         case custom(Double, Double, Double)
     }
     
     static func hexStringToUIColor (hex: String) -> Color {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-
+        
         if (cString.hasPrefix("#")) {
             cString.remove(at: cString.startIndex)
         }
-
+        
         if ((cString.count) != 6) {
             return .gray
         }
-
+        
         var rgbValue:UInt64 = 0
         Scanner(string: cString).scanHexInt64(&rgbValue)
-
+        
         return Color(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
             green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,

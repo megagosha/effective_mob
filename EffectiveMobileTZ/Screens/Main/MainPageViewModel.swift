@@ -20,7 +20,7 @@ final class MainPageViewModel: ObservableObject {
     
     @Published public var bestSales: [BestSeller] = []
     
-    @Published private(set) var isRefreshing = false
+    @Published private(set) var isRefreshing = true
     
     @Published var hasError = false
     
@@ -79,6 +79,7 @@ final class MainPageViewModel: ObservableObject {
             } receiveValue: { [weak self] mainPageData in
                 self?.hotSales = mainPageData.home_store
                 self?.bestSales = mainPageData.best_seller
+                self?.isRefreshing = false
             }
         bag.insert(responseStream)
     }
@@ -88,7 +89,7 @@ final class MainPageViewModel: ObservableObject {
     }
     
     func goToCart() {
-        self.router.coordinator.goToCart()
+        self.router.coordinator.route(to: \.pushCart)
     }
 }
 

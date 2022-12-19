@@ -10,7 +10,7 @@ import Stinsen
 
 struct CartView: View {
     
-    @StateObject var vm: CartViewModel
+    @ObservedObject var vm: CartViewModel
     
     @State var value = 1
     
@@ -123,14 +123,17 @@ struct CartView: View {
                     color: Color(red: 1.0, green: 1.0, blue: 1.0, opacity: 0.25),
                     height: 1
                 )
-                LargeSquaredButtonView(content: {
-                    Text("Checkout")
-                        .textStyle(
-                            color: .defined(.white),
-                            size: 20,
-                            font: .MarkProBold)
-                },
-                                       action: {print("Checkout")})
+                LargeSquaredButtonView(
+                    content: {
+                        Text("Checkout")
+                            .textStyle(
+                                color: .defined(.white),
+                                size: 20,
+                                font: .MarkProBold)
+                    },
+                    action: {print("Checkout")}
+                )
+                .padding(EdgeInsets(top: 27, leading: 44, bottom: 10, trailing: 44))
             }
             .padding(.bottom, 30)
             .background(

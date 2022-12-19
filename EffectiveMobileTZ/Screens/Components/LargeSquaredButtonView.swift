@@ -23,7 +23,6 @@ struct LargeSquaredButtonView<Content:View>: View {
                 .frame(maxWidth: .infinity, maxHeight: 54)
                 .background(Color.getColor(.accent))
                 .cornerRadius(10)
-                .padding()
         }
     }
 }
